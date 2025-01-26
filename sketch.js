@@ -1,34 +1,24 @@
-let ip_api = 'http://api.ipify.org?format=json';
-let ip;
 let ip_colores = 'https://www.thecolorapi.com/id?rgb=rgb(';
 let colorData;
 
 function setup() {
   createCanvas(400, 400);
-  getIP ();
   getColores ();
   setInterval (getColores,3000);
 }
 
-function getIP (){
-  fetch (ip_api)
-  .then (response=>response.json())
-  .then (data => ip = data.ip);
-}
 
-function getColores (){
+async function getColores (){
   let r = floor (random(256));
   let g = floor (random(256));
   let b = floor (random(256));
-  fetch (ip_colores+r+','+g+','+b+')')
-  .then (response =>response.json())
-  .then (data => {
-    colorData = {
-    name: data.name.value,
-    hex: data.hex.clean,
+  let data = await fetch (ip_colores+r+','+g+','+b+')')
+  let j_data = await data.json();
+  colorData = {
+    name: j_data.name.value,
+    hex: j_data.hex.clean,
     rgb:[r,g,b]
   };
-});
 }
 
 function draw() {
